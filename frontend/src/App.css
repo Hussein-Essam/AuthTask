@@ -1,0 +1,10 @@
+/* Import Roboto font weights */
+@import url('@fontsource/roboto/300.css'); /* Light */
+@import url('@fontsource/roboto/400.css'); /* Regular */
+@import url('@fontsource/roboto/500.css'); /* Medium */
+@import url('@fontsource/roboto/700.css'); /* Bold */
+
+/* Set the default font family for the entire application */
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+}
