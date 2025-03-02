@@ -3,12 +3,12 @@ import { SignInDto } from "../shared/dtos/signInDto";
 import { SignUpDto } from "../shared/dtos/signUpDto";
 import { toast } from "react-toastify";
 
-const API_URL = "http://localhost:3000/api"; // Adjust the base URL as needed
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const apiService = {
   signIn: async (payload: SignInDto) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/signin`, payload);
+      const response = await axios.post(`${apiUrl}/auth/signin`, payload);
       if (response.data.message) {
         toast.success(response.data.message || "Sign in successful");
       }
@@ -30,8 +30,8 @@ const apiService = {
   },
 
   signUp: async (payload: SignUpDto) => {
-    const response = await axios.post(`${API_URL}/auth/signup`, payload);
     try {
+      const response = await axios.post(`${apiUrl}/auth/signup`, payload);
       if (response.data.message) {
         toast.success(response.data.message || "Sign up successful");
       }
@@ -51,7 +51,7 @@ const apiService = {
     try {
       const token = localStorage.getItem("jwt");
       if (!token) return null;
-      const response = await axios.get(`${API_URL}/auth/me`, {
+      const response = await axios.get(`${apiUrl}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -47,7 +47,7 @@ This project consists of a **NestJS** backend and a **React** frontend that work
    ```
 4. Start the React application:
    ```sh
-   npm start
+   npm run dev
    ```
 
 ## API Endpoints
