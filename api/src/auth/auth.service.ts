@@ -4,7 +4,6 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { SignUpDto } from 'src/auth/dtos/sign-up.dto';
 import { JwtService } from '@nestjs/jwt';
-import { UserDocument } from 'src/user/schemas/user.schema';
 import { AuthUser } from './interfaces/request.interface';
 
 @Injectable()
@@ -25,10 +24,10 @@ export class AuthService {
           'User Already Registered With The Same Email',
         );
       }
-      const createdUser = this.userService.createUser(signUpDto);
+      await this.userService.createUser(signUpDto);
       this.logger.log('Sign up successful');
 
-      return { message: 'Sign up successful', user: createdUser };
+      return { message: 'Sign up successful' };
     } catch (error) {
       this.logger.error(`Sign up failed: ${error.message}`, error.stack);
       throw error;
@@ -57,15 +56,20 @@ export class AuthService {
   public async validateUser(
     email: string,
     password: string,
-  ): Promise<UserDocument | null> {
+  ): Promise<AuthUser | null> {
     const user = await this.userService.findByEmail(email);
-    return user && (await bcrypt.compare(password, user.password))
-      ? user
-      : null;
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return { _id: user._id, email: user.email, name: user.name };
+    }
+    return null;
   }
 
-  async validateUserById(userId: string): Promise<UserDocument | null> {
+  async validateUserById(userId: string) {
     const user = await this.userService.findById(userId);
-    return user || null;
+    if (user) {
+      return { id: user._id.toString(), email: user.email, name: user.name };
+    }
+    return null;
   }
 }
